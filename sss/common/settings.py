@@ -9,8 +9,12 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import os
 from pathlib import Path
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +29,9 @@ SECRET_KEY = "django-insecure-(#z)8sj2bp9q(qp*!s*gv)9m02t!p=y=f-_o@!co5ajv#nqimw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost",
+]
 
 
 # Application definition
@@ -37,6 +43,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
+    "sss.app",
+    "sss.consumer",
 ]
 
 MIDDLEWARE = [
@@ -49,7 +58,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "sss.common.urls"
+ROOT_URLCONF = "sss.common.routes.urls"
 
 TEMPLATES = [
     {
@@ -69,14 +78,46 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "sss.common.wsgi.application"
 
-
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ],
+    "DEFAULT_RENDERER_CLASSES": (
+        "djangorestframework_camel_case.render.CamelCaseJSONRenderer",
+        "djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer",
+    ),
+    "DEFAULT_PARSER_CLASSES": (
+        "djangorestframework_camel_case.parser.CamelCaseFormParser",
+        "djangorestframework_camel_case.parser.CamelCaseMultiPartParser",
+        "djangorestframework_camel_case.parser.CamelCaseJSONParser",
+    ),
+}
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+
+MYSQL_HOST = os.environ.get("MYSQL_HOST", default="127.0.0.1")
+MYSQL_USER = os.environ.get("MYSQL_USER", default="release")
+MYSQL_PASSWORD = os.environ.get("MYSQL_PASSWORD", default="release")
+MYSQL_DB_NAME = os.environ.get("MYSQL_DB_NAME", default="release")
+
+MONGODB_USER = os.environ.get("MONGODB_USER", default="")
+MONGODB_PASSWORD = os.environ.get("MONGODB_PASSWORD", default="")
+MONGODB_HOST = os.environ.get("MONGODB_HOST", default="")
+
+AWS_REGION_NAME = os.environ.get("AWS_REGION_NAME", default="")
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", default="")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", default="")
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": MYSQL_DB_NAME,
+        "USER": MYSQL_USER,
+        "PASSWORD": MYSQL_PASSWORD,
+        "HOST": MYSQL_HOST,
+        "PORT": "3306",
     }
 }
 
@@ -105,7 +146,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Seoul"
 
 USE_I18N = True
 
