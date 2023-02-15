@@ -1,0 +1,10 @@
+[MASTER]
+load-plugins=pylint_django
+
+[MESSAGES CONTROL]
+disable=missing-class-docstring,
+        missing-function-docstring,
+        missing-module-docstring,
+        import-outside-toplevel,
+        invalid-name,
+        arguments-differ,
