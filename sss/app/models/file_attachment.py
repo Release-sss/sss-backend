@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from .base.timestamped_model import TimestampedModel
+
 __all__ = ["FileAttachment", "FileAttachmentQuerySet"]
 
 
@@ -8,7 +10,7 @@ class FileAttachmentQuerySet(models.QuerySet["FileAttachment"]):
     ...
 
 
-class FileAttachment(models.Model):
+class FileAttachment(TimestampedModel):
     content_type = models.CharField(
         verbose_name=_("파일 종류"), max_length=100, blank=True, null=True
     )
